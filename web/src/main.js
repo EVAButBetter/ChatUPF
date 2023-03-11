@@ -15,8 +15,12 @@ Vue.component('font-awesome-icon', FontAwesomeIcon)
 Vue.use(Vant)
 
 Vue.config.productionTip = false
-Vue.prototype.$http = axios.create({
+Vue.prototype.$http_text = axios.create({
   baseURL: 'http://localhost:3000/'
+})
+
+Vue.prototype.$http_voice = axios.create({
+  baseURL: 'http://localhost:8001/'
 })
 
 new Vue({

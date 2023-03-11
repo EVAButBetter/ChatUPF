@@ -82,7 +82,7 @@ export default {
             };
             this.msgList.push(msg);
             this.inputMsg = '';
-            const res = await this.$http.post(`/web`, msg);
+            const res = await this.$http_text.post(`/web`, msg);
             this.msgList.push(res.data);
         },
 
@@ -148,10 +148,12 @@ export default {
             const voice = this.recorder.getWAVBlob()
             const newbolb = new Blob([voice], { type: 'audio/wav' })
             const fileOfBlob = new File([newbolb], new Date().getTime() + '.wav')
-            formData.append('data', fileOfBlob)
-            await this.$http.post("/web/voice", formData, config).then(res => {
-                console.log(res.data.data[0].url)
+            formData.append('file', fileOfBlob)
+            await this.$http_voice.post("/voice", formData, config).then(res => {
+                
+                console.log(res)
             })
+            this.recorder.destroy()
         }
 
 
