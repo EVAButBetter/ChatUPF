@@ -1,0 +1,35 @@
+{
+  "name": "chat-mobile",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build"
+  },
+  "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^6.3.0",
+    "@fortawesome/free-brands-svg-icons": "^6.3.0",
+    "@fortawesome/free-regular-svg-icons": "^6.3.0",
+    "@fortawesome/free-solid-svg-icons": "^6.3.0",
+    "@fortawesome/vue-fontawesome": "^2.0.10",
+    "axios": "^0.19.2",
+    "core-js": "^3.6.4",
+    "js-audio-recorder": "^1.0.7",
+    "recorder-core": "^1.2.23020100",
+    "vant": "^2.8.1",
+    "vue": "^2.6.11",
+    "vue-router": "^3.1.6",
+    "vuex": "^3.4.0"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "~4.3.0",
+    "@vue/cli-plugin-router": "~4.3.0",
+    "@vue/cli-service": "~4.3.0",
+    "vue-template-compiler": "^2.6.11"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ]
+}
