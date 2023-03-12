@@ -1,18 +1,19 @@
 <template>
-    <div style="background-color: #f5f6f7;height: 100vh">
-        <van-nav-bar style="height: 65px" class="chat-header" :border=false>
-            <template #left>
+    <div >
+        <van-nav-bar class="chat-header" :border=false>
 
-            </template>
-            <template #right>
-                <van-icon style="transform:rotate(90deg);" name="ellipsis" color="#333333" size="25" />
-            </template>
         </van-nav-bar>
 
-        <div class="chat-main" style="">
+        <div class="chat-main" id="container" style="">
             <div v-for="(item, index) in msgList" :key="index">
                 <div v-if="item.isReceived === false" class="message-item right">
-                    {{ item.content }}
+                    <div v-if="item.type === 'text'">
+                        {{ item.content }}
+                    </div>
+                    <div v-else @click="playSound(item.content)">
+                        <font-awesome-icon icon="fa-solid fa-play" /> &nbsp;
+                        <font-awesome-icon icon="fa-solid fa-ellipsis" />
+                    </div>
                 </div>
                 <div v-else class="message-item">
                     {{ item.content }}
@@ -64,6 +65,10 @@ export default {
                     type: "text",
                     content: 'Hello !',
                 }
+            ],
+            voice_num: 0,
+            voiceList: [
+
             ]
         };
     },
@@ -75,22 +80,24 @@ export default {
         async sendMessage() {
             if (this.inputMsg == "" || typeof this.inputMsg === "undefined")
                 return;
-            const msg = {
+            var msg = {
                 isReceived: false,
+                type: "text",
                 content: this.inputMsg,
-                type: "text"
             };
             this.msgList.push(msg);
             this.inputMsg = '';
             const res = await this.$http_text.post(`/web`, msg);
-            this.msgList.push(res.data);
+            console.log(res);
+            res.data.data.isReceived = true
+            this.msgList.push(res.data.data);
         },
 
         start_touch(item) {
             var self = this;
             this.timeOutEvent = setTimeout(function () {
                 self.start_listen(item);
-            }, 300);
+            }, 100);
             return false;
         },
         stop_touch(item) {
@@ -129,13 +136,28 @@ export default {
             })
         },
 
+        playSound(index) {
+            console.log(index);
+            var recorder = this.voiceList[index]
+            recorder.play()
+        },
+
         async uploadRecord() {
             if (this.recorder == null || this.recorder.duration === 0) {
                 console.log("there is no voice");
                 return false
             }
+            var self = this
             this.recorder.stop();
-            this.recorder.play();
+            this.voiceList.push(this.recorder)
+
+            // this.recorder.play();
+            const msg = {
+                isReceived: false,
+                type: "voice",
+                content: this.voice_num++,
+            };
+            this.msgList.push(msg)
             this.timer = null
             console.log('uploading')
 
@@ -150,10 +172,16 @@ export default {
             const fileOfBlob = new File([newbolb], new Date().getTime() + '.wav')
             formData.append('file', fileOfBlob)
             await this.$http_voice.post("/voice", formData, config).then(res => {
-                
-                console.log(res)
+                console.log(res);
+                if (res.status == 200) {
+                    console.log(res.data.data);
+                    var msg = res.data.data
+                    self.msgList.push(msg)
+
+
+                }
+
             })
-            this.recorder.destroy()
         }
 
 
